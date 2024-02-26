@@ -1,6 +1,7 @@
 //! Basic PIO programming
 //!
-//! This program will switch on/off defined pin, with the frequency 31.25Hz
+//! This program will switch on/off defined pin, with the frequency based on
+//! Pico clock, clock_div and numer of cycles (Minimal ~29Hz)
 //!
 #![no_std]
 #![no_main]
@@ -15,17 +16,13 @@ use panic_probe as _;
 use rp_pico as bsp;
 
 
-// System clock
-const RP2040_CLOCK_HZ: u32 = 125_000_000;
-const CYCLES_PER_SAMPLE: u32 = 4;
-const I2S_PIO_CLOCKDIV_INT: u16 = (RP2040_CLOCK_HZ / CYCLES_PER_SAMPLE) as u16;
+const I2S_PIO_CLOCKDIV_INT: u16 = u16::MAX;
 const I2S_PIO_CLOCKDIV_FRAC: u8 = 0u8;
 
 
 #[entry]
 fn main() -> ! {
     info!("Program start");
-    info!("I2S_PIO_CLOCKDIV_INT = {=u16}", I2S_PIO_CLOCKDIV_INT);
     let mut pac = pac::Peripherals::take().unwrap();
     let core = pac::CorePeripherals::take().unwrap();
     let mut watchdog = Watchdog::new(pac.WATCHDOG);
@@ -44,6 +41,11 @@ fn main() -> ! {
     )
     .ok()
     .unwrap();
+
+    info!("Clock {=u32}", clocks.system_clock.freq().to_Hz());
+    info!("I2S_PIO_CLOCKDIV_INT = {=u16}", I2S_PIO_CLOCKDIV_INT);
+    info!("freq = {=u32}", clocks.system_clock.freq().to_Hz() / I2S_PIO_CLOCKDIV_INT as u32 / 64);
+
 
     let mut delay = cortex_m::delay::Delay::new(core.SYST, clocks.system_clock.freq().to_Hz());
 
