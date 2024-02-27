@@ -8,7 +8,7 @@ use bsp::hal::{
     clocks::{init_clocks_and_plls, Clock},
     pac,
     sio::Sio,
-    watchdog::Watchdog,
+    watchdog::Watchdog, Timer,
 };
 use cortex_m_rt::entry;
 use defmt::*;
@@ -50,7 +50,11 @@ fn main() -> ! {
 
     let mut led_pin = pins.led.into_push_pull_output();
 
+    let timer = Timer::new(pac.TIMER, &mut pac.RESETS, &clocks);
+    let start =  timer.get_counter_low();
+
     loop {
+        info!("Timer {=u32}", timer.get_counter_low() - start);
         info!("on!");
         led_pin.set_high().unwrap();
         delay.delay_ms(500);
