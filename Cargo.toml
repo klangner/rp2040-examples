@@ -1,10 +1,9 @@
 [package]
-authors = ["the rp-rs team"]
-edition = "2018"
+authors = ["Krzysztof Langner klangner@gmail.com"]
+edition = "2021"
 readme = "README.md"
-name = "rp-pico-sandbox"
+name = "rp2040-examples"
 version = "0.1.0"
-resolver = "2"
 
 [dependencies]
 cortex-m = "0.7"
