@@ -10,10 +10,10 @@ resolver = "2"
 cortex-m = "0.7"
 cortex-m-rt = "0.7"
 embedded-hal = { version = "0.2", features = ["unproven"] }
-
 defmt = "0.3"
 defmt-rtt = "0.4"
 panic-probe = { version = "0.3", features = ["print-defmt"] }
+num-traits = { version = "0.2", default-features = false , features = ["libm"]}
 
 rp-pico = "0.8"
 
