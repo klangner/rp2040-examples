@@ -16,7 +16,7 @@ use panic_probe as _;
 use rp_pico as bsp;
 #[allow(unused_imports)]
 use num_traits::float::Float;
-use rp2040_examples::oscillator::{Oscillator, Square};
+use rp2040_sandbox::oscillator::{Oscillator, Square};
 
 
 // Sound sample rate

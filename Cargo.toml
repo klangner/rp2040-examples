@@ -2,7 +2,7 @@
 authors = ["Krzysztof Langner klangner@gmail.com"]
 edition = "2021"
 readme = "README.md"
-name = "rp2040-examples"
+name = "rp2040-sandbox"
 version = "0.1.0"
 
 [dependencies]
