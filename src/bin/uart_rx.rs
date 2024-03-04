@@ -32,8 +32,8 @@ const XTAL_FREQ_HZ: u32 = 12_000_000u32;
 /// an infinite loop.
 #[entry]
 fn main() -> ! {
-    // Grab our singleton objects
     let mut pac = pac::Peripherals::take().unwrap();
+    let core = pac::CorePeripherals::take().unwrap();
 
     // Set up the watchdog driver - needed by the clock setup code
     let mut watchdog = Watchdog::new(pac.WATCHDOG);
@@ -70,16 +70,18 @@ fn main() -> ! {
     );
     let uart = UartPeripheral::new(pac.UART1, uart_pins, &mut pac.RESETS)
         .enable(
-            UartConfig::new(9600.Hz(), DataBits::Eight, None, StopBits::One),
+            UartConfig::new(115_200.Hz(), DataBits::Eight, None, StopBits::One),
             clocks.peripheral_clock.freq(),
         )
         .unwrap();
 
-    let mut buffer = [0u8; 20];
-
+    let mut delay = cortex_m::delay::Delay::new(core.SYST, clocks.system_clock.freq().to_Hz());
+    let mut buffer = [0u8; 100];
     loop {
         if uart.read_raw(&mut buffer).ok().is_some() {
-            info!("{}", &buffer);
+            info!("{:x}", &buffer);
         }
+        
+        delay.delay_ms(5);
     }
 }
