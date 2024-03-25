@@ -23,6 +23,12 @@ use rp_pico as bsp;
 /// if your board has a different frequency
 const XTAL_FREQ_HZ: u32 = 12_000_000u32;
 
+// Spektrum SRXL2
+const BOUND_RATE: u32 = 115_200;
+// Jeti EX bus 
+// const BOUND_RATE: u32 = 125_000;
+// const BOUND_RATE: u32 = 250_000;
+
 /// Entry point to our bare-metal application.
 ///
 /// The `#[rp2040_hal::entry]` macro ensures the Cortex-M start-up code calls this function
@@ -70,7 +76,7 @@ fn main() -> ! {
     );
     let uart = UartPeripheral::new(pac.UART1, uart_pins, &mut pac.RESETS)
         .enable(
-            UartConfig::new(115_200.Hz(), DataBits::Eight, None, StopBits::One),
+            UartConfig::new(BOUND_RATE.Hz(), DataBits::Eight, None, StopBits::One),
             clocks.peripheral_clock.freq(),
         )
         .unwrap();
