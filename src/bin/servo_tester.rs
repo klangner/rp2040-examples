@@ -12,6 +12,7 @@ use bsp::hal::{
     adc::AdcPin, clocks::{init_clocks_and_plls, Clock}, pac, sio::Sio, watchdog::Watchdog, Adc
 };
 use cortex_m_rt::entry;
+use defmt::info;
 use defmt_rtt as _;
 use embedded_hal::{adc::OneShot, digital::v2::OutputPin};
 use panic_probe as _;
@@ -60,10 +61,11 @@ fn main() -> ! {
     let mut pot_pin = AdcPin::new(pins.gpio26);
     let mut servo_pin = pins.gpio15.into_push_pull_output();
 
+    info!("start");
     loop {
         let v: u16 = adc.read(&mut pot_pin).unwrap();
-        // info!("Pot value {=u16}", v);
         let pulse: u32 = PULSE_MIN + (PULSE_WIDTH * v as u32) / 4096;
+        info!("Pulse: {}", pulse);
         servo_pin.set_high().unwrap();
         delay.delay_us(pulse);
         servo_pin.set_low().unwrap();
